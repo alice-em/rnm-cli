@@ -1,0 +1,13 @@
+{
+  "name": "rnm",
+  "version": "0.0.1",
+  "description": "rename terminal client for Node",
+  "main": "index.js",
+  "repository": "https://github.com/alice-em/rnm-cli",
+  "author": "Alice Maldonado",
+  "license": "GNU",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0"
+  }
+}
