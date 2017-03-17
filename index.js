@@ -17,8 +17,8 @@ let massRename;
 
 program
   .version('0.0.1')
-  .usage('[options] <directory> <destination>')
-  .option('-c --copy', 'Makes a copy')
+  .usage('[options] <string> <directory>')
+  .option('-c --copy <string> <directory> <destination>', 'Makes a copy')
   .parse(process.argv);
 
 massRename = (folder, regex, replace) => {
