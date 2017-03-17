@@ -13,7 +13,7 @@ let folder = path.join(`${folder}`); // Folder the script reads to replace text
 let regex = /_/gi; // rename.js finds `regex` to replace with `replaceWith`, which replaces with whatver
 let replace = `${string}`;
 
-let rename;
+let massRename;
 
 program
   .version('0.0.1')
@@ -34,5 +34,5 @@ massRename = (folder, regex, replace) => {
 };
 
 exports.module = (folder, regex, replace) => {
-  rename(folder, regex, replace);
+  massRename(folder, regex, replace);
 };
