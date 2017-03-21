@@ -13,7 +13,7 @@ let folder = '/media/alicemod/Ajax/Comic Database/Action Comics (2016)'; // Fold
 let regex = /\(.+\)|[^a-zA-Z0-9.\s]/gi; // rename.js finds `regex` to replace with `replaceWith`, which replaces with whatver
 let replace = '';
 
-let rename;
+let massRename;
 
 program
   .version('0.0.1')
@@ -47,8 +47,8 @@ massRename = (folder, regex, replace) => {
   };
 };
 
-// exports.module = (folder, regex, replace) => {
-//   rename(folder, regex, replace);
-// };
-
 massRename(folder, regex, replace);
+
+exports.module = (folder, regex, replace) => {
+  massRename(folder, regex, replace);
+};
