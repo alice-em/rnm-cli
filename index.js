@@ -24,7 +24,8 @@ program
 
 massRename = (folder, regex, replace) => {
   let directory = fs.readdirSync(folder);
-  for (i=0; i < directory.length; i++) {
+  console.dir(directory);
+  for (let i = 0; i < directory.length; i++) {
     let check = fs.readdirSync(folder); // Updates per cycle
 
     if (fs.statSync(path.join(folder, directory[i])).isFile()) {
@@ -54,7 +55,9 @@ massRename = (folder, regex, replace) => {
       }
     } else if (fs.statSync(path.join(folder, directory[i])).isDirectory()) {
       let newPath = path.join(folder, directory[i]);
+      console.log(`: Switching to folder ${newPath}`.green);
       massRename(newPath, regex, replace);
+      console.log(`: Returning to ${folder}`.green)
     } else {
       console.log(`No valid target file for ${directory[i]}.`);
     }
