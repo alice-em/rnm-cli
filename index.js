@@ -10,8 +10,8 @@ const colors = require('colors');
 const program = require('commander');
 const fs = require('fs');
 const path = require('path');
-let folder = 'path'; // Folder the script reads to replace text
-let regex = /\(.+\)|[^a-zA-Z0-9.\s\&\,]/gi; // rename.js finds `regex` to replace with `replaceWith`, which replaces with whatver
+let folder = 'Path/to/directory'; // Folder the script reads to replace text
+let regex = /\(.+\) |\(.+\)|[^a-zA-Z0-9.\s\&\,]/gi; // rename.js finds `regex` to replace with `replaceWith`, which replaces with whatever
 let replace = '';
 
 let massRename;
@@ -24,20 +24,18 @@ program
 
 massRename = (folder, regex, replace) => {
   let directory = fs.readdirSync(folder);
-  console.dir(directory);
+  // console.dir(directory);
   for (let i = 0; i < directory.length; i++) {
     let check = fs.readdirSync(folder); // Updates per cycle
 
     if (fs.statSync(path.join(folder, directory[i])).isFile()) {
       if (directory[i].match(regex) && directory[i].charAt(0) != '.') {
 
-        console.log(`Processing ${directory[i]}`);
-
         let ext = path.extname(directory[i]); // Extension
         let a = path.basename(directory[i], ext)
           .replace(/_|-/g, ' ') // Replaces _ with ' '
           .replace(regex, replace) // basename with regex applied
-          .replace(/\s\s/g, ' '); // Condenses double spaces
+          .replace(/\s\s+/g, ' '); // Condenses double spaces
         if (a.charAt(a.length - 1) == ' ') {
           a = a.slice(0, -1) + ext; // Removes ' '
         } else {
@@ -46,8 +44,8 @@ massRename = (folder, regex, replace) => {
         let prev = path.join(folder, directory[i]);
         let next = path.join(folder, a);
         if (check.indexOf(a) > -1) {
-          console.log('Err! Program would overwrite existing file.'.red);
-          // return;
+          console.log(`:: Err! Program would overwrite existing file.\n:: File: ${a}\n:: Dir: ${folder}`.red);
+          break;
         } else {
           fs.renameSync(prev, next);
           console.log(`${directory[i]} => ${a}`);
@@ -55,9 +53,9 @@ massRename = (folder, regex, replace) => {
       }
     } else if (fs.statSync(path.join(folder, directory[i])).isDirectory()) {
       let newPath = path.join(folder, directory[i]);
-      console.log(`: Switching to folder ${newPath}`.green);
+      // console.log(`: Switching to folder ${newPath}`.green);
       massRename(newPath, regex, replace);
-      console.log(`: Returning to ${folder}`.green)
+      // console.log(`: Returning to ${folder}`.green)
     } else {
       console.log(`No valid target file for ${directory[i]}.`);
     }
