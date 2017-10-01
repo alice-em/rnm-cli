@@ -23,41 +23,43 @@ program
   .parse(process.argv);
 
 massRename = (folder, regex, replace) => {
-  let directory = fs.readdirSync(folder);
-  // console.dir(directory);
-  for (let i = 0; i < directory.length; i++) {
+  let files = fs.readdirSync(folder);
+  console.dir(files);
+  for (let i = 0; i < files.length; i++) {
     let check = fs.readdirSync(folder); // Updates per cycle
+    let prev = path.join(folder, files[i]);
+    let stat = fs.statSync(prev);
+    // console.log(prev)
+    if (stat.isFile()) {
+      if (files[i].match(regex) && files[i].charAt(0) != '.') {
 
-    if (fs.statSync(path.join(folder, directory[i])).isFile()) {
-      if (directory[i].match(regex) && directory[i].charAt(0) != '.') {
-
-        let ext = path.extname(directory[i]); // Extension
-        let a = path.basename(directory[i], ext)
-          .replace(/_|-/g, ' ') // Replaces _ with ' '
+        let ext = path.extname(files[i]); // Extension
+        let basename = path.basename(files[i], ext)
+          .replace(/\&/, 'and')
+          .replace(/_/g, ' ') // Replaces _ with ' '
           .replace(regex, replace) // basename with regex applied
           .replace(/\s\s+/g, ' '); // Condenses double spaces
-        if (a.charAt(a.length - 1) == ' ') {
-          a = a.slice(0, -1) + ext; // Removes ' '
+        if (basename.charAt(basename.length - 1) == ' ') {
+          basename = basename.slice(0, -1) + ext; // Removes ' '
         } else {
-          a = a + ext;
+          basename = basename + ext;
         };
-        let prev = path.join(folder, directory[i]);
-        let next = path.join(folder, a);
-        if (check.indexOf(a) > -1) {
-          console.log(`:: Err! Program would overwrite existing file.\n:: File: ${a}\n:: Dir: ${folder}`.red);
+        let next = path.join(folder, basename);
+        if (check.indexOf(basename) > -1) {
+          console.log(`:: Err! Program would overwrite existing file.\n:: File: ${prev}\n:: Dir: ${folder}`.red);
           break;
         } else {
-          fs.renameSync(prev, next);
-          console.log(`${directory[i]} => ${a}`);
+          // fs.renameSync(prev, next);
+          console.log(`${files[i]} => ${basename}`);
         }
       }
-    } else if (fs.statSync(path.join(folder, directory[i])).isDirectory()) {
-      let newPath = path.join(folder, directory[i]);
+    } else if (stat.isDirectory() && files[i] != '.yacreaderlibrary') {
+      let newPath = path.join(folder, files[i]);
       // console.log(`: Switching to folder ${newPath}`.green);
       massRename(newPath, regex, replace);
       // console.log(`: Returning to ${folder}`.green)
     } else {
-      console.log(`No valid target file for ${directory[i]}.`);
+      console.log(`No valid target file for ${files[i]}.`);
     }
   };
 };
